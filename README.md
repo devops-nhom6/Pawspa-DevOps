@@ -1,5 +1,6 @@
 # Test CI/CD Auto Trigger
-Content: test automated trigger 
+Content: test automated trigger via webhook
+
 # Generate a random JWT_SECRET
 ```
 openssl rand -base64 32
