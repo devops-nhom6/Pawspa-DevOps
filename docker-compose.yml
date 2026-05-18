@@ -105,6 +105,8 @@ services:
     restart: always
     ports:
       - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
     networks:
       - pawspa-network
 
@@ -119,3 +121,4 @@ volumes:
   jenkins_home:
     external: true
     name: du-an-web_jenkins_home
+  grafana_data:
