@@ -73,10 +73,49 @@ services:
     networks:
       - pawspa-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: pawspa-prometheus
+    restart: always
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - pawspa-network
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: cadvisor
+    restart: always
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - "8083:8080"
+    networks:
+      - pawspa-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: pawspa-grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - pawspa-network
+
 networks:
   pawspa-network:
     driver: bridge
 
 volumes:
   mysql_data:
+    external: true
+    name: du-an-web_mysql_data
   jenkins_home:
+    external: true
+    name: du-an-web_jenkins_home
