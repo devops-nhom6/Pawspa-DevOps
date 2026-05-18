@@ -1,3 +1,5 @@
+# Test CI/CD Auto Trigger
+
 # Generate a random JWT_SECRET
 ```
 openssl rand -base64 32
