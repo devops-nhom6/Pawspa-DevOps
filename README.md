@@ -1,5 +1,5 @@
 # Test CI/CD Auto Trigger
-Content: test automated trigger via webhook
+TEST AUTO TRIGGER JENKINS
 
 # Generate a random JWT_SECRET
 ```

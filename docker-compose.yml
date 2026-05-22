@@ -88,9 +88,15 @@ services:
     image: gcr.io/cadvisor/cadvisor:v0.47.2
     container_name: cadvisor
     restart: always
+    privileged: true
+    command:
+      - "--docker_only=true"
+      - "--store_container_labels=true"
+      - "--whitelisted_container_labels=com.docker.compose.service,com.docker.compose.project"
     volumes:
       - /:/rootfs:ro
-      - /var/run:/var/run:ro
+      - /var/run:/var/run:rw
+      - /var/run/docker.sock:/var/run/docker.sock:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
@@ -98,6 +104,28 @@ services:
       - "8083:8080"
     networks:
       - pawspa-network
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: pawspa-node-exporter
+    restart: always
+    pid: host
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--no-collector.filesystem"
+      - "--no-collector.softnet"
+      - "--no-collector.netstat"
+    ports:
+      - "9100:9100"
+    networks:
+      - pawspa-network
+
 
   grafana:
     image: grafana/grafana:latest
