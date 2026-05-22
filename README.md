@@ -1,5 +1,5 @@
 # Test CI/CD Auto Trigger
-TEST AUTO TRIGGER JENKINS 2
+TEST AUTO TRIGGER JENKINS 3
 
 # Generate a random JWT_SECRET
 ```
