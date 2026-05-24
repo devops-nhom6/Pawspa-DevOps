@@ -14,6 +14,18 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    composer install --no-interaction --prefer-dist
+                    if [ ! -x vendor/bin/phpunit ]; then
+                      echo "phpunit not found in lockfile install, running composer update to sync dev dependencies"
+                      composer update --no-interaction --prefer-dist
+                    fi
+                '''
+            }
+        }
+
         stage('Composer Validate') {
             steps {
                 sh 'composer validate --no-check-lock'
@@ -23,6 +35,28 @@ pipeline {
         stage('PHP Syntax Check') {
             steps {
                 sh 'find src public -name "*.php" -print0 | xargs -0 -n1 php -l'
+            }
+        }
+
+        stage('Unit Test') {
+            steps {
+                sh 'mkdir -p reports'
+                sh 'vendor/bin/phpunit --testdox --log-junit reports/junit.xml'
+            }
+        }
+
+        stage('Code Coverage') {
+            steps {
+                sh '''
+                    mkdir -p coverage
+                    if command -v phpdbg >/dev/null 2>&1; then
+                      phpdbg -qrr vendor/bin/phpunit --coverage-clover coverage/clover.xml --coverage-text
+                    elif php -m | grep -qi xdebug; then
+                      XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-clover coverage/clover.xml --coverage-text
+                    else
+                      echo "Skipping coverage: phpdbg/xdebug not available"
+                    fi
+                '''
             }
         }
 
@@ -60,6 +94,10 @@ pipeline {
     }
 
     post {
+        always {
+            junit allowEmptyResults: true, testResults: 'reports/junit.xml'
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'coverage/clover.xml'
+        }
         success {
             echo 'Pipeline completed successfully. Pawspa has been deployed.'
         }

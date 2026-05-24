@@ -12,8 +12,18 @@
       "App\\": "./src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6"
+  },
   "scripts": {
-    "dev": "php -S localhost:8000 -t ./public server.php"
+    "dev": "php -S localhost:8000 -t ./public server.php",
+    "test": "vendor/bin/phpunit --testdox",
+    "test:coverage": "vendor/bin/phpunit --coverage-clover coverage/clover.xml --coverage-text"
   },
   "config": {
     "process-timeout": 0
