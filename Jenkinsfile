@@ -17,7 +17,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                    composer install --no-interaction --prefer-dist
+                                        composer install --no-interaction --prefer-dist || \
+                                        composer update doctrine/instantiator phpunit/phpunit --with-all-dependencies --no-interaction --prefer-dist
                     if [ ! -x vendor/bin/phpunit ]; then
                       echo "phpunit not found in lockfile install, running composer update to sync dev dependencies"
                       composer update --no-interaction --prefer-dist
