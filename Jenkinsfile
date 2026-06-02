@@ -84,11 +84,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Tạo file .env giả lập từ .env.example vì Git không lưu file .env
                 sh 'cp .env.example .env || touch .env'
-                
-                // Chỉ build và khởi động lại service 'app' (chứa code PHP mới)
-                // Phải chỉ định -p du-an-web để Docker hiểu là đang cập nhật project gốc chứ không phải tạo project mới (gây xung đột tên container)
                 sh 'docker-compose -p du-an-web up -d --build app'
             }
         }
