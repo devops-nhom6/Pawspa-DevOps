@@ -42,7 +42,7 @@ pipeline {
         stage('Unit Test') {
             steps {
                 sh 'mkdir -p reports'
-                sh 'vendor/bin/phpunit -- --log-junit reports/junit.xml'
+                sh 'vendor/bin/phpunit --testdox --log-junit reports/junit.xml'
             }
         }
 
